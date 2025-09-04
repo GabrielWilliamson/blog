@@ -1,0 +1,12 @@
+---
+export interface Props {
+  id?: string;
+  icon: string;
+  class?: string;
+}
+
+const { icon, class: className = "", id } = Astro.props as Props;
+const { default: innerHTML } = await import(`/src/icons/${icon}.svg?raw`);
+---
+
+<div id={id} class={`icon-wrapper ${className}`} set:html={innerHTML} />

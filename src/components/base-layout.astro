@@ -1,0 +1,43 @@
+---
+import Head from "@/components/head";
+import "../styles/global.css";
+import Footer from "@/components/footer";
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  isArticle?: boolean;
+}
+
+const { title, description = "", image, isArticle } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" transition:animate="none">
+  <head>
+    <Head
+      title={title}
+      description={description}
+      image={image}
+      isArticle={isArticle}
+    />
+  </head>
+
+  <body>
+    <div class="layout" transition:animate="slide">
+      <main>
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>
+
+<style>
+  .layout {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+  }
+</style>

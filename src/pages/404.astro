@@ -1,0 +1,57 @@
+---
+import Layout from "@/components/base-layout";
+---
+
+<Layout title="404">
+  <section class="error-section">
+    <div class="error-box">
+      <span id="status-code">404</span>
+      <div class="underline blink"></div>
+    </div>
+    <span class="error-text">
+      Looks like you're lost! You sure you know where you're going?
+    </span>
+  </section>
+</Layout>
+
+<style>
+  .error-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75vh;
+  }
+
+  .error-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 6rem;
+    padding: 1rem;
+    height: min-content;
+  }
+
+  .underline {
+    border-bottom: 2px solid var(--accent, #ff4d4d);
+    width: 100%;
+    margin-top: 0.25rem;
+  }
+
+  .error-text {
+    margin-left: 1rem;
+  }
+
+  .blink {
+    animation: blink 1.2s infinite;
+  }
+
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+</style>

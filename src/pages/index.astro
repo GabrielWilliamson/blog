@@ -1,0 +1,185 @@
+---
+import BaseLayout from "@/components/base-layout";
+import Socials from "@/components/socials";
+import ToolBadge from "@/components/tool-badge";
+import { personalInfo } from "@/utils/information";
+
+const personalLD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  dateCreated: "2024-12-1T12:34:00-05:00",
+  dateModified: "2024-12-1T14:53:00-05:00",
+  mainEntity: {
+    "@type": "Person",
+    name: personalInfo.name,
+    description: personalInfo.description,
+    sameAs: personalInfo.socials.map((social) => social.url),
+  },
+  url: typeof window !== "undefined" ? window.location.origin : "",
+});
+---
+
+<BaseLayout title="Home">
+  <script type="application/ld+json" set:html={personalLD} />
+
+  <main class="home">
+    <div class="container">
+      <header class="header">
+        <h1 class="main-title">
+          {personalInfo.name}
+        </h1>
+        <h2 class="subtitle">
+          {personalInfo.title}
+        </h2>
+      </header>
+
+      <section class="info-grid">
+        <article class="card">
+          <h3 class="card-title">Experience</h3>
+          <p class="card-description">
+            I have hands-on experience with these technologies, working on real-world projects for companies and clients. They have been an essential part of my daily work, helping me solve problems and deliver professional solutions.
+          </p>
+          <div class="tools">
+            {
+              personalInfo.workTools.map((tool) => (
+                <ToolBadge tool={tool} redirectToUrl />
+              ))
+            }
+          </div>
+        </article>
+
+        <article class="card card-with-border">
+          <h3 class="card-title">Favorite Tools</h3>
+          <p class="card-description">Beyond professional experience, I also enjoy exploring and building with these tools in my personal projects. They are my favorites because I take them to production and constantly experiment with their full potential.</p>
+          <div class="tools">
+            {
+              personalInfo.favoriteTools.map((tool) => (
+                <ToolBadge tool={tool} redirectToUrl />
+              ))
+            }
+          </div>
+        </article>
+
+        <article class="card card-with-border">
+          <h3 class="card-title">About Me</h3>
+          <p class="card-description">
+            {personalInfo.description}
+          </p>
+        </article>
+      </section>
+
+      <section class="links-section">
+        <a
+          href="/posts"
+          title="Blog"
+          aria-label="Link to Read my blog"
+          class="link">Read my blog</a
+        >
+
+        <Socials />
+      </section>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .home {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2rem 1rem;
+    overflow: hidden;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 64rem;
+    margin: 0 auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .main-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+
+  .tools {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+    font-weight: 300;
+    margin: 0.75rem 0 0;
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .card-with-border {
+    border-left: none;
+  }
+
+  .card-title {
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    margin: 0 0 0.75rem;
+  }
+
+
+  .links-section {
+    text-align: center;
+    margin-top: 3rem;
+  }
+
+  .blog-text {
+    font-size: 1rem;
+    margin: 0 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .main-title {
+      font-size: 3rem;
+    }
+
+    .subtitle {
+      font-size: 1.5rem;
+    }
+
+    .info-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .card-with-border {
+      border-left: var(--border);
+      padding-left: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,106 @@
+---
+import { getCollection } from "astro:content";
+import { getEntry, render } from "astro:content";
+import type { Article } from "@/utils/types";
+import { personalInfo, domain } from "@/utils/information";
+import Layout from "@/components/base-layout";
+import Code from "@/components/code";
+import Date from "@/components/date";
+
+export async function getStaticPaths() {
+  const posts = await getCollection(
+    "articles",
+    (article) => !article.data.draft
+  );
+  return posts.map((article: Article) => ({
+    params: { slug: article.id },
+  }));
+}
+
+const { slug } = Astro.params;
+const article = await getEntry("articles", slug);
+
+if (!article) {
+  return Astro.redirect("/posts");
+}
+
+const { title, description, date, category, tools, image } = article.data;
+const { Content } = await render(article);
+
+const postLD = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  articleSection: category,
+  description: description,
+  dateCreated: "2024-12-1T12:34:00-05:00",
+  dateModified: "2024-12-1T14:53:00-05:00",
+  image: [image ? `${domain}${image}` : `${domain}/images/og-image.png`],
+
+  author: {
+    "@type": "Person",
+    name: personalInfo.name,
+    url: `${domain}/`,
+  },
+  url: `${domain}/posts/${article.id}`,
+  ...(tools?.length
+    ? {
+        keywords: tools.join(", "),
+      }
+    : {}),
+});
+---
+
+<script type="application/ld+json" set:html={postLD} />
+<Layout title={title} description={description} image={image} isArticle>
+  <div class="container">
+    <div class="post-header">
+      <h1>{title}</h1>
+      <div class="header-detail">
+        <Date date={date} />
+        <a
+          class="link"
+          aria-label="Link to back to posts"
+          title="Back to posts"
+          href={`/posts/`}>Back</a
+        >
+      </div>
+    </div>
+    <div class="content">
+      <Content />
+    </div>
+  </div>
+</Layout>
+<Code />
+
+<style>
+  .container {
+    padding-top: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100dvh;
+    max-width: 100vw;
+  }
+
+  .post-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+    width: 100%;
+    max-width: 60%;
+  }
+
+  @media (max-width: 768px) {
+    .post-header {
+      max-width: 90%;
+    }
+  }
+
+  .header-detail {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>

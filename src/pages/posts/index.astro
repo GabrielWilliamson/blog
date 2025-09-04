@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+import type { Article } from "@/utils/types";
+import Layout from "@/components/base-layout";
+import PostCard from "@/components/post-card";
+
+// exclue drafts
+const articles: Article[] = await getCollection(
+  "articles",
+  (article) => !article.data.draft
+);
+---
+
+<Layout title="Posts">
+  <div class="posts-layout">
+    <section class="posts">
+      <h1 class="posts-title">Posts</h1>
+      <div class="posts-container" id="articles-container">
+        {articles.map((article: Article) => <PostCard article={article} />)}
+      </div>
+    </section>
+  </div>
+</Layout>

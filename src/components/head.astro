@@ -1,0 +1,69 @@
+---
+import { information, personalInfo } from "@/utils/information";
+import { ClientRouter } from "astro:transitions";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  isArticle?: boolean;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const {
+  title,
+  description: descriptionProp,
+  image: imageProp,
+  isArticle,
+} = Astro.props;
+
+const defaultTitle = information.title;
+const titleSeparator = "|";
+const normalTitle = title
+  ? `${title} ${titleSeparator} ${information.title}`
+  : defaultTitle;
+const siteTitle = isArticle ? title : normalTitle;
+
+const image = imageProp ?? "/images/banner.png";
+
+const description = descriptionProp ? descriptionProp : information.description;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<!-- <link rel="icon" href="/favicon.svg" type="image/svg+xml" /> -->
+<meta name="generator" content={Astro.generator} />
+
+<title>{siteTitle}</title>
+<meta name="title" content={siteTitle} />
+<meta name="description" content={description} />
+<meta name="author" content={personalInfo.name} />
+
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={siteTitle} />
+<mata property="og:image" content={new URL(image!, Astro.url)}></mata>
+<meta
+  property="og:description"
+  content={description ?? information.description}
+/>
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={Astro.url} />
+<meta name="twitter:title" content={siteTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image!, Astro.url)} />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+<link rel="canonical" href={canonicalURL} />
+
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={siteTitle}
+  href={`${Astro.site}rss.xml`}
+/>
+
+<ClientRouter />

@@ -1,0 +1,110 @@
+<script>
+  const icons = {
+    copy: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+            </svg>`,
+    expand: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+            </svg>`,
+    contract: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="icon">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5 5.25 5.25" />
+            </svg>`,
+    check: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+</svg>
+`,
+  };
+
+  function isLong(block: Element) {
+    if (!block) return false;
+    if (!block.textContent) return false;
+
+    const lines = block.textContent.split("\n").length;
+    const height = block.scrollHeight;
+
+    return lines > 10 || height > 150;
+  }
+
+  async function copyCode(block: Element, button: HTMLElement) {
+    try {
+      const text = block.textContent;
+
+      if (!text) return;
+
+      await navigator.clipboard.writeText(text);
+
+      button.innerHTML = icons.check;
+
+      setTimeout(() => {
+        button.innerHTML = icons.copy;
+      }, 1500);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  function toggleExpansion(wrapper: Element, button: HTMLElement) {
+    const codeBlock = wrapper.querySelector("pre");
+
+    if (!codeBlock) return;
+
+    const isCollapsed = codeBlock.classList.contains("code-collapsed");
+
+    if (isCollapsed) {
+      codeBlock.classList.remove("code-collapsed");
+      button.innerHTML = icons.contract + " Collapse";
+    } else {
+      codeBlock.classList.add("code-collapsed");
+      button.innerHTML = icons.expand + " Expand";
+    }
+  }
+
+  function init() {
+    const allCodeBlocks = document.querySelectorAll("pre");
+
+    allCodeBlocks.forEach((block) => {
+      if (block.closest(".code-wrapper")) return;
+
+      const parent = block.parentElement;
+      if (!parent) return;
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-wrapper";
+
+      parent.replaceChild(wrapper, block);
+      wrapper.appendChild(block);
+
+      const copyBtn = document.createElement("button");
+      copyBtn.className = "cody-copy-code button";
+      copyBtn.innerHTML = icons.copy;
+      copyBtn.title = "Copy code";
+
+      copyBtn.addEventListener("click", () => {
+        copyCode(block, copyBtn);
+      });
+
+      wrapper.appendChild(copyBtn);
+
+      if (isLong(block)) {
+        block.classList.add("code-collapsed");
+
+        const expandButton = document.createElement("button");
+        expandButton.className = "expand-toggle button";
+        expandButton.innerHTML = icons.expand + " Expand";
+        expandButton.title = "Expand/Collapse";
+
+        expandButton.addEventListener("click", () => {
+          toggleExpansion(wrapper, expandButton);
+        });
+
+        wrapper.appendChild(expandButton);
+      }
+
+      block.setAttribute("tabindex", "0");
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    init();
+  });
+</script>

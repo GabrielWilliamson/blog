@@ -1,0 +1,48 @@
+---
+import Layout from "@/components/base-layout";
+import PostCard from "@/components/post-card";
+import ToolBadge from "@/components/tool-badge";
+import type { Article, Tool } from "@/utils/types";
+
+import { getCollection, getEntry } from "astro:content";
+
+export async function getStaticPaths() {
+  const tools = await getCollection("tools");
+
+  return tools.map((tool: Tool) => ({
+    params: { tag: tool.id },
+  }));
+}
+
+const { tag } = Astro.params;
+
+const articles = await getCollection(
+  "articles",
+  (article) => article.data.tools?.includes(tag) && !article.data.draft
+);
+
+const currentTool = await getEntry("tools", tag);
+---
+
+<Layout title={`More about ${currentTool?.data.name}`}>
+  <div class="posts-layout">
+    <section class="posts">
+      <h1 class="posts-title">Posts</h1>
+      <div class="posts-bar">
+        <p class="posts-tag-description">
+          More about: <span><ToolBadge tool={tag} redirectToUrl /></span>
+        </p>
+
+        <a
+          class="link"
+          aria-label="Link to back to posts"
+          title="Back to posts"
+          href={`/posts/`}>Back</a
+        >
+      </div>
+      <div class="posts-container">
+        {articles.map((article: Article) => <PostCard article={article} />)}
+      </div>
+    </section>
+  </div>
+</Layout>

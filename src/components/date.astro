@@ -1,0 +1,10 @@
+---
+import { getFormattedDate } from "@/utils/date";
+
+const { date, dateTimeOptions, locale, ...attrs } = Astro.props;
+const postDate = getFormattedDate(date, dateTimeOptions, locale);
+---
+
+<time datetime={date.toISOString()} {...attrs} title={postDate}>
+  {postDate}
+</time>

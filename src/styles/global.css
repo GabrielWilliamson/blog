@@ -1,0 +1,74 @@
+@import "./button.css";
+@import "./link.css";
+@import "./article.css";
+@import "./articles.css";
+
+@font-face {
+  font-family: "JosefinSans";
+  src: url("/fonts/JosefinSans-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "GoogleSansCode";
+  src: url("/fonts/GoogleSansCode-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+:root {
+  /* neutral 800 */
+  --color-accent: oklch(0.27 0 0);
+  /* neutral 950 */
+  --foreground: oklch(0.14 0 0);
+  /* neutral 900 */
+  --secondary-foreground: oklch(0.2 0 0);
+  /* neutral 700 */
+  --color-button: oklch(0.37 0 0);
+  /* neutral 50 */
+  --color-foreground: oklch(0.99 0 0);
+  /* neutral 600 */
+  --border: 2px solid oklch(0.72 0 0);
+  /* neutral 900 */
+  --border-hovered: oklch(0.2 0 0);
+  /* sky 800 */
+  --link: oklch(0.44 0.1 241);
+
+  --font-code: "GoogleSansCode", monospace;
+  --font: "JosefinSans", sans-serif;
+}
+
+* {
+  font-family: var(--font);
+  font-weight: 300;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background: white;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-button);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-foreground);
+}
+
+::-moz-selection {
+  background-color: var(--color-accent);
+  color: var(--color-foreground);
+}
