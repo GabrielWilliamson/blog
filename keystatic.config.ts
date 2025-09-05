@@ -8,7 +8,8 @@ const categoryOptions = [
 
 export default config({
   storage: {
-    kind: "local",
+    kind: "github",
+    repo: `gabrielwilliamson/blog`,
   },
   collections: {
     articles: collection({
